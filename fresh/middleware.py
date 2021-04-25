@@ -5,6 +5,7 @@ from watchdog.events import FileSystemEventHandler
 from bs4 import BeautifulSoup
 
 from django.conf import settings
+from django.template.response import ContentNotRenderedError
 
 fresh = False
 
@@ -54,7 +55,10 @@ class FreshMiddleware:
                     items["fresh"] = True
                     response.content = json.dumps(items)
             elif mimetype == "text/html; charset=utf-8":
-                response = self.inject_fresh(response)
+                try:
+                    response = self.inject_fresh(response)
+                except ContentNotRenderedError as e:
+                    pass
 
         return response
 
