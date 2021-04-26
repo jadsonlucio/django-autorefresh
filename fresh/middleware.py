@@ -23,7 +23,7 @@ class RefreshEventHandler(FileSystemEventHandler):
 
 class FreshMiddleware:
     def inject_fresh(self, response):
-        soup = BeautifulSoup(response.content)
+        soup = BeautifulSoup(response.content, "html.parser")
         if soup and soup.find("head"):
             url = settings.STATIC_URL + "fresh/js/refresher.js"
             script_fresh = soup.new_tag("script", src=url)
