@@ -57,7 +57,7 @@ class FreshMiddleware:
             elif mimetype == "text/html; charset=utf-8":
                 try:
                     response = self.inject_fresh(response)
-                except ContentNotRenderedError as e:
+                except ContentNotRenderedError:
                     pass
 
         return response

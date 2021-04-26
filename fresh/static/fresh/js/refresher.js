@@ -1,25 +1,24 @@
 console.warn = () => { };
 
-function checkRefresh() {
+var successive_errors = 0
 
-    var response = false;
-    while (!response) {
-        try {
-            var req = new XMLHttpRequest();
-            req.open('GET', '/fresh/', false);
-            req.send();
-            response = true;
-            var fresh = JSON.parse(req.responseText).fresh;
-            if (fresh) location.reload();
-        } catch (e) {
-            location.reload();
+function checkRefresh() {
+    try {
+        var req = new XMLHttpRequest();
+        req.open('GET', '/fresh/', false);
+        req.send();
+        var fresh = JSON.parse(req.responseText).fresh;
+        if (fresh) location.reload();
+        successive_errors = 0;
+        doPoll();
+    } catch (e) {
+        successive_errors++;
+        if (successive_errors < 10) {
+            doPoll();
         }
 
+
     }
-
-
-
-    doPoll();
 }
 
 function doPoll() {
