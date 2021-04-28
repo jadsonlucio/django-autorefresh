@@ -22,7 +22,7 @@ polling to refresh the page.
  2. In `settings.py` add `fresh` to `INSTALLED_APPS`.
  3. In `settings.py` add `fresh.middleware.FreshMiddleware` to `MIDDLEWARE_CLASSES`.
  4. In `settings.py` have `SITE_ROOT` variable set to the absolute path of your projects files.
- 5. In `urls.py` add `url(r'', include('fresh.urls'))` to `urlpatterns`.
+ 5. In `urls.py` add `path('', include('fresh.urls'))` to `urlpatterns`.
 
 ### `SITE_ROOT` Example
 
@@ -42,6 +42,13 @@ You have two customizable choices:
 
  1. `FRESH_ACCEPTED_EXTENSIONS` is an array that is checked when files are updated, if an extension is not in the list it won't trigger a refresh.
  2. `FRESH_IGNORED_PAGES` is an array that is checked before injecting the refresh code, if page in list it won't have the code injected. 
+ 2. `FRESH_FILTER_LOGGING` is an boolean that control if the fresh update requests (normaly with path "/fresh/") will be displayed in django server debug console, helpfull to not get terminal overflowed with logging request message of fresh. (`Default is True`)
+ 3. `FRESH_FILTER_PATH` is the url path that javascript uses to make requests to the server asking if the any files have changed normaly will be "/fresh/". (`Default is /fresh/`)
+ 4. `FRESH_FILTER_LEVEL` is maximum http status code that fresh will use to filter requests debug log. As example, if your FRESH_FILTER_LEVEL is 200, an the server responds the fresh request with 201 code that message will be not be filtered in django debug logging. (`Default is 200`)
+
+FRESH_FILTER_PATH = "/fresh/"
+FRESH_FILTER_LEVEL = 200
+
 
 ### `FRESH_ACCEPTED_EXTENSIONS` Defaults
 
@@ -65,6 +72,14 @@ You have two customizable choices:
 django-autorefresh checks to see if `debug` is `True`, if it is `False` it doesn't do
 anything to prevent you from accidently including it in production.
 
+
+## Test (only in linux for now)
+
+1. First you need to install an virtualenv running: `python -m venv venv`
+2. Enter in your virtuenv running: `source venv/bin/activate`
+3. Install dev depencies running: `pip install -r requirements-development.txt`
+4. Now open the terminal in the subfolder `django_test_project`and run `python manage.py runserver`.
+5. You can now open the file `app/templates/app/index.html` an start to make changes and see your browser auto refresh automaticly :fire:
 
 ## License (Simplified BSD)
 
