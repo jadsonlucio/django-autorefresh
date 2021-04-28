@@ -1,6 +1,7 @@
 console.warn = () => { };
 
 var successive_errors = 0
+var max_sucessive_errors = 7200 // aproximily 2 hours
 
 function checkRefresh() {
     try {
@@ -13,7 +14,7 @@ function checkRefresh() {
         doPoll();
     } catch (e) {
         successive_errors++;
-        if (successive_errors < 10) {
+        if (successive_errors < max_sucessive_errors) {
             doPoll();
         }
 

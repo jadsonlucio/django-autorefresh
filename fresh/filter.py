@@ -1,10 +1,16 @@
-from fresh.settings import Config
+from django.conf import settings
+from fresh import settings as fresh_settings
 
 
 def filter_fresh_request(record):
     msg, level, _ = record.args
-    if Config.FILTER_LOGGING:
-        if Config.FILTER_LEVEL >= int(level) and f"GET {Config.FILTER_PATH}" in msg:
+    if getattr(settings, "FRESH_FILTER_LOGGING", fresh_settings.FRESH_FILTER_LOGGING):
+        fresh_filter_path = f"GET {getattr(settings, 'FRESH_FILTER_PATH', fresh_settings.FRESH_FILTER_PATH)}"
+        if (
+            getattr(settings, "FRESH_FILTER_LEVEL", fresh_settings.FRESH_FILTER_LEVEL)
+            >= int(level)
+            and fresh_filter_path in msg
+        ):
             return False
 
     return True
