@@ -14,7 +14,6 @@ fresh = False
 
 class RefreshEventHandler(PatternMatchingEventHandler):
     def on_any_event(self, event):
-        print(event.src_path)
         global fresh
         fresh = True
         """ACCEPTED_EXTENSIONS = getattr(
@@ -43,7 +42,7 @@ class FreshMiddleware:
             return response
 
         global fresh
-        mimetype = response._headers["content-type"][1]
+        mimetype = response.headers["content-type"]
         IGNORED_PAGES = getattr(
             settings, "FRESH_IGNORED_PAGES", fresh_settings.FRESH_IGNORED_PAGES
         )
@@ -52,7 +51,7 @@ class FreshMiddleware:
         for ignored_page in IGNORED_PAGES:
             if request.path.lower().startswith(ignored_page):
                 ignored = True
-
+    
         if not ignored:
             if mimetype == "application/json":
                 items = json.loads(response.content)
