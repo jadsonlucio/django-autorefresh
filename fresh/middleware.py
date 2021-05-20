@@ -1,24 +1,29 @@
 import json
 
 from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
+from watchdog.events import PatternMatchingEventHandler
 from bs4 import BeautifulSoup
 
 from django.conf import settings
 from django.template.response import ContentNotRenderedError
 
+from fresh import settings as fresh_settings
+
 fresh = False
 
 
-class RefreshEventHandler(FileSystemEventHandler):
+class RefreshEventHandler(PatternMatchingEventHandler):
     def on_any_event(self, event):
         global fresh
-        ACCEPTED_EXTENSIONS = getattr(
-            settings, "FRESH_ACCEPTED_EXTENSIONS", [".py", ".html", ".js", ".css"]
+        fresh = True
+        """ACCEPTED_EXTENSIONS = getattr(
+            settings,
+            "FRESH_ACCEPTED_EXTENSIONS",
+            fresh_settings.FRESH_ACCEPTED_EXTENSIONS,
         )
         for extension in ACCEPTED_EXTENSIONS:
             if event.src_path.lower().endswith(extension):
-                fresh = True
+                fresh = True"""
 
 
 class FreshMiddleware:
@@ -37,16 +42,16 @@ class FreshMiddleware:
             return response
 
         global fresh
-        mimetype = response._headers["content-type"][1]
+        mimetype = response.headers["content-type"]
         IGNORED_PAGES = getattr(
-            settings, "FRESH_IGNORED_PAGES", ["/admin/", "/admin_keywords_submit/"]
+            settings, "FRESH_IGNORED_PAGES", fresh_settings.FRESH_IGNORED_PAGES
         )
         ignored = False
 
         for ignored_page in IGNORED_PAGES:
             if request.path.lower().startswith(ignored_page):
                 ignored = True
-
+    
         if not ignored:
             if mimetype == "application/json":
                 items = json.loads(response.content)
@@ -65,8 +70,16 @@ class FreshMiddleware:
     def watcher(self):
         observer = Observer()
 
+        ACCEPTED_EXTENSIONS = getattr(
+            settings,
+            "FRESH_ACCEPTED_EXTENSIONS",
+            fresh_settings.FRESH_ACCEPTED_EXTENSIONS,
+        )
+
         path = settings.SITE_ROOT
-        event_handler = RefreshEventHandler()
+        event_handler = RefreshEventHandler(
+            patterns=ACCEPTED_EXTENSIONS, ignore_patterns=[".*"]
+        )
         observer.schedule(event_handler, path, recursive=True)
 
         observer.start()
