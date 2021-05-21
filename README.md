@@ -18,7 +18,7 @@ polling to refresh the page.
 
 ## Setup
 
- 1. Install fresh by running `pip install django-autorefresh`.
+ 1. Install fresh by running `pip install git+https://github.com/jadsonlucio/django-autorefresh@1.0.8` or putting `git+https://github.com/jadsonlucio/django-autorefresh@1.0.8` in your requirements.txt.
  2. In `settings.py` add `fresh` to `INSTALLED_APPS`.
  3. In `settings.py` add `fresh.middleware.FreshMiddleware` to `MIDDLEWARE_CLASSES`.
  4. In `settings.py` have `SITE_ROOT` variable set to the absolute path of your projects files.
