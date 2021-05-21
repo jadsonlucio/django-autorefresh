@@ -1,5 +1,9 @@
 # django-autorefresh
 
+![img](https://img.shields.io/badge/license-MIT-green) ![img](https://img.shields.io/pypi/v/django?color=green&label=Django)
+
+⚠️ If you are running this app in an windows filesystem and using in an container in wsl the autorefresh may not work, if you have this problem please copy your project files to linux filesystem before running the project.
+
 django-autorefresh is an fork created to work with new versions of django and was based 
 on https://pypi.org/project/django-fresh/ authored by Isaac Bythewood.
 
