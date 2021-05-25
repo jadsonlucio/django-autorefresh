@@ -1,9 +1,8 @@
 from setuptools import setup
-from fresh import __version__
 
 setup(
     name="django-autorefresh",
-    version=__version__,
+    version="1.0.10",
     license="Simplified BSD",
     install_requires=["Django>=3.1.7", "watchdog>=2.0.3", "beautifulsoup4>=4.9.3"],
     description="Auto-refresh your browser when files in your project change.",
@@ -21,6 +20,6 @@ setup(
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Framework :: Django"
+        "Framework :: Django",
     ],
 )
