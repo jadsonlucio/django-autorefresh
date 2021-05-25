@@ -1,5 +1,5 @@
 from setuptools import setup
-from fresh import __version__
+from fresh.version import __version__
 
 setup(
     name="django-autorefresh",
@@ -21,6 +21,6 @@ setup(
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Framework :: Django"
+        "Framework :: Django",
     ],
 )
