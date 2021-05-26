@@ -38,10 +38,15 @@ class FreshMiddleware:
         return response
 
     def process_template_response(self, request, response):
+        global fresh
+
         if not settings.DEBUG:
             return response
+        elif not hasattr(response, "headers"):
+            return response
+        elif "content-type" not in response.headers:
+            return response
 
-        global fresh
         mimetype = response.headers["content-type"]
         IGNORED_PAGES = getattr(
             settings, "FRESH_IGNORED_PAGES", fresh_settings.FRESH_IGNORED_PAGES
@@ -51,7 +56,7 @@ class FreshMiddleware:
         for ignored_page in IGNORED_PAGES:
             if request.path.lower().startswith(ignored_page):
                 ignored = True
-    
+
         if not ignored:
             if mimetype == "application/json":
                 items = json.loads(response.content)
